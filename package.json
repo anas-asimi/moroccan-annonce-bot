@@ -1,0 +1,28 @@
+{
+  "name": "jobs-hunter",
+  "version": "1.0.0",
+  "description": "a node app to auto apply to jobs in www.marocannonces.com",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "jest --verbose"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "eslint-plugin-jest": "^27.2.1",
+    "nodemon": "^2.0.22",
+    "puppeteer": "^19.11.1"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.21.5",
+    "babel-jest": "^29.5.0",
+    "jest": "^29.5.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
