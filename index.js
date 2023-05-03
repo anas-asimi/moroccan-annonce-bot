@@ -1,42 +1,42 @@
-import puppeteer from "puppeteer";
-import { params, homePgae, loginPage, offresPage, USERNAME, PASSWORD } from "./utils/config.js";
-import { login, isStringContain } from "./utils/functions.js"
-import keywords from './utils/keywords.json' assert { type: "json" };
+import { loginPageUrl, offresPageUrl, USERNAME, PASSWORD } from "./utils/config.js";
+import { login, extractOffres, applyToAll } from "./utils/functions.js"
+import browser from "./utils/browser.js";
+import { turnOnDataSaving } from './utils/page.js'
 
 
-(async () => {
+async function main() {
 
-
-    const browser = await puppeteer.launch(params);
     const [page] = await browser.pages()
+    await turnOnDataSaving(page)
 
     // login in
-    // await page.goto(loginPage)
-    // await login(page, USERNAME, PASSWORD)
+    await page.goto(loginPageUrl)
+    await login(page, USERNAME, PASSWORD)
+    console.log("login in succesfully");
 
-    let offres
     // extract offres
-    for (let i = 1; i <= 1; i++) {
-        let URL =  `${offresPage}/${i}.html`
-        await page.goto(URL)
-        let allOffres = await page.evaluate(async () => {
-            let list = document.querySelectorAll('#content .listing_set.list > article')
-            let list2 = document.querySelectorAll('#content .listing_set.list > article')
-            return [...list, ...list2].map(offre => {
-                let link = offre.firstElementChild.href
-                let title = offre.querySelector('.holder h3').innerText
-                return { link, title }
-            })
-        })
-        console.log(`found ${allOffres.length} in ${URL}`);
-        offres = allOffres.filter(offre => {
-            return isStringContain(offre.title,keywords)
-        })
-        console.log(`but just ${allOffres.length} is really good`);
+    let totalApplies = 0
+    for (let i = 1; ; i++) {
+        console.log('--------------------------------')
+        let url = offresPageUrl + i + `.html`
+        console.log(`url => ${url}`)
+        await page.goto(url)
+
+        let offres = await extractOffres(page)
+        console.log(`offres => ${offres.length}`);
+        if (offres.length === 0) continue
+        console.log(offres.map(offre => offre.title).join('\n'));
+
+        let appliesCount = await applyToAll(page, offres)
+        console.log(`applies => ${appliesCount}`);
+        if (appliesCount === 0) continue
+
+        totalApplies += appliesCount
+        if (totalApplies > 100000) break
     }
 
+    console.log(`${totalApplies} offres has applied in total`);
+    await browser.close()
+}
 
-})()
-
-
-// make unit test for isStringContain
+main()
