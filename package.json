@@ -1,5 +1,5 @@
 {
-  "name": "jobs-hunter",
+  "name": "moroccan-annonce-bot",
   "version": "1.0.0",
   "description": "a node app to auto apply to jobs in www.marocannonces.com",
   "main": "index.js",
@@ -7,15 +7,17 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "mocha"
+    "test": "mocha --timeout 100000 --exit"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "colors": "^1.4.0",
     "dotenv": "^16.0.3",
     "jsonfile": "^6.1.0",
     "nodemon": "^2.0.22",
-    "puppeteer": "^19.11.1"
+    "puppeteer": "^19.11.1",
+    "user-agents": "^1.0.1369"
   },
   "devDependencies": {
     "mocha": "^10.2.0"
